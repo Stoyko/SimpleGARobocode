@@ -28,12 +28,11 @@ public class Input {
 	}
 	
 	private int inputType;
+	private int previousLine;
 	
 	public InputType getInputTypeEnum() {
 		return InputType.values()[this.inputType];
 	}
-	
-	
 	
 	public DoActuatorType getDoActuatorTypeEnum() {
 		return DoActuatorType.values()[this.inputType];

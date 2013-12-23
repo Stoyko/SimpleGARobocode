@@ -6,7 +6,7 @@ public class Row {
 		greatherThan,
 		lessThan,
 		equal,
-        addition,
+		addition,
 		substraction,
 		multiplication,
 		division,
@@ -23,7 +23,7 @@ public class Row {
 	
 	private Operator operator;
 	
-    private Input input1, input2;
+	private Input input1, input2;
 	
 	private float output;
 
