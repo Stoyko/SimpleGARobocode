@@ -24,7 +24,10 @@ public class Input {
 	
 	public enum DoActuatorType {
 		turnLeft,
-		turnRight		
+		turnRight,
+		back,
+		forward,
+		fire
 	}
 	
 	private int inputType;
@@ -60,5 +63,4 @@ public class Input {
 		this.inputType = inputType;
 		this.previousLine = previousLine;
 	}
-	
 }

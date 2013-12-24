@@ -20,20 +20,9 @@ public class Row {
 		normalizeRelativeAngle,
 		controlActuator
 	};
-	
+
 	private Operator operator;
-	
 	private Input input1, input2;
-	
-	private float output;
-
-	public float getResult() {
-		return output;
-	}
-
-	public void setResult(float output) {
-		this.output = output;
-	}
 
 	public Operator getOperator() {
 		return operator;
@@ -58,7 +47,7 @@ public class Row {
 	public void setInput2(Input input2) {
 		this.input2 = input2;
 	}
-	
+
 	public Row(Operator operator, Input input1, Input input2) {
 		this.operator = operator;
 		this.input1 = input1;
