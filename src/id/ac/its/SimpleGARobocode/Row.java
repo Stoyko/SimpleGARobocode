@@ -23,7 +23,8 @@ public class Row {
 
 	private Operator operator;
 	private Input input1, input2;
-
+	private double result;
+	
 	public Operator getOperator() {
 		return operator;
 	}
@@ -53,4 +54,14 @@ public class Row {
 		this.input1 = input1;
 		this.input2 = input2;
 	}
+
+	public double getResult() {
+		return result;
+	}
+
+	public void setResult(double result) {
+		this.result = result;
+	}
+	
+	
 }

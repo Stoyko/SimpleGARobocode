@@ -2,17 +2,26 @@ package id.ac.its.SimpleGARobocode;
 
 import robocode.AdvancedRobot;
 import robocode.HitRobotEvent;
+import robocode.RobocodeFileWriter;
 import robocode.ScannedRobotEvent;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class MainRobot extends AdvancedRobot {
 	TableREX tableRun, tableOnScanned, tableOnHitWall, tableOnHitBullet, tableOnHitRobot = null;
 	int state, genomeNumber;
-	List <String> genomeStringRun, genomeStringOnScanned, genomeStringOnHitWall, genomeStringOnHitBullet, genomeStringOnHitRobot = new ArrayList<String>();
+	List <String> genomeStringRun = new ArrayList<String>(), 
+				  genomeStringOnScanned = new ArrayList<String>(), 
+				  genomeStringOnHitWall = new ArrayList<String>(), 
+				  genomeStringOnHitBullet = new ArrayList<String>(), 
+				  genomeStringOnHitRobot = new ArrayList<String>();
 	List <Integer> fitnessValue  = new ArrayList<Integer>();
+	boolean initialized = false;
 	
 	/*
 	 * This method purpose is to initialize GeneticAlgorithm Robocode Mechanism
@@ -30,7 +39,7 @@ public class MainRobot extends AdvancedRobot {
 	 * 10010101010101010101010100101010101010111010101001 	# tableOnHitRobot Genome #1
 	 * 2002		# Fitness value for Genome #1
 	 */
-	public void initialize(){
+	public void initialize() throws IOException{
 		
 		BufferedReader buf = null;
 		try {
@@ -49,7 +58,6 @@ public class MainRobot extends AdvancedRobot {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
 		}
 		
 		// Read the state
@@ -75,7 +83,25 @@ public class MainRobot extends AdvancedRobot {
 		// Is this crossing and mutating state?
 		if(state == 0) {
 			// Crossing and mutating part
+			GeneticAlgorithmRobocode ga = new GeneticAlgorithmRobocode(genomeNumber, genomeStringRun, genomeStringOnScanned, genomeStringOnHitWall, genomeStringOnHitBullet, genomeStringOnHitRobot, fitnessValue);
+			ga.doCrossingMutating();
+		
+			// Write to a file
+			RobocodeFileWriter fw = new RobocodeFileWriter(new File("ga.txt"));
+            fw.write("0\n");
+			for (int i = 0; i < genomeNumber; i++) {
+				fw.write(genomeStringRun.get(i) + "\n");
+				fw.write(genomeStringOnScanned.get(i) + "\n");
+				fw.write(genomeStringOnHitWall.get(i) + "\n");
+				fw.write(genomeStringOnHitBullet.get(i) + "\n");
+				fw.write(genomeStringOnHitRobot.get(i) + "\n");
+				
+				
+			}
 			
+			for (int i = 0; i < genomeNumber; i++) {
+				fw.write("0\n");
+			}
 		}
 		
         // Testing part
@@ -88,18 +114,31 @@ public class MainRobot extends AdvancedRobot {
         } catch (Exception e) {
             
         }
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	public void run() {
+		try {
+			this.initialize();
+		} catch (IOException e) {
+			
+		}
 		
+		initialized = true;
+		while(true) {
+			// Read run table
+			for(int i = 0; i < tableRun.getTableRow().size(); i++) {
+				// Calculate result, depends on operator
+				Row.Operator operator = tableRun.getTableRow().get(i).getOperator();
+				
+				//double inputValue2 = 
+				switch(tableRun.getTableRow().get(i).getOperator()) {
+				case greatherThan:
+					//tableRun.getTableRow().get(i).setResult((double) );
+					break;
+					
+				}
+			}
+		}
 	}
 
 	@Override

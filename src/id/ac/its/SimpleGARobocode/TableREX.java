@@ -3,7 +3,7 @@ package id.ac.its.SimpleGARobocode;
 import java.util.List;
 
 public class TableREX {
-	final int numRows = 44;		// Sementara di fiksasi seperti ini
+	final int numRows = 44;		    // Sementara di fiksasi seperti ini
 									// Jadi setiap masukan terdiri dari 7-bit (16 + 44)
 	List <Row> tableRow;
 	
@@ -38,4 +38,18 @@ public class TableREX {
 			tableRow.add(newRow);
 		}	
 	}
+	
+	public TableREX(String genome) {
+		this.inputFromGnome(genome);
+	}
+
+	public int getNumRows() {
+		return numRows;
+	}
+	
+	public List<Row> getTableRow() {
+		return tableRow;
+	}
+	
+	
 }
