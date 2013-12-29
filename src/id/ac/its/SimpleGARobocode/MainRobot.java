@@ -2,8 +2,11 @@ package id.ac.its.SimpleGARobocode;
 
 import robocode.AdvancedRobot;
 import robocode.HitRobotEvent;
+import robocode.HitWallEvent;
 import robocode.RobocodeFileWriter;
+import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
+import robocode.util.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +17,7 @@ import java.util.*;
 
 public class MainRobot extends AdvancedRobot {
 	TableREX tableRun, tableOnScanned, tableOnHitWall, tableOnHitBullet, tableOnHitRobot = null;
-	int state, genomeNumber;
+	int state = 0, genomeNumber = 16;
 	List <String> genomeStringRun = new ArrayList<String>(), 
 				  genomeStringOnScanned = new ArrayList<String>(), 
 				  genomeStringOnHitWall = new ArrayList<String>(), 
@@ -39,6 +42,23 @@ public class MainRobot extends AdvancedRobot {
 	 * 10010101010101010101010100101010101010111010101001 	# tableOnHitRobot Genome #1
 	 * 2002		# Fitness value for Genome #1
 	 */
+	
+	private void doWriteFile() throws IOException {
+        RobocodeFileWriter fw = new RobocodeFileWriter(new File("ga.txt"));
+        fw.write(state + "\n");
+        fw.write(genomeNumber + "\n");
+        for (int i = 0; i < genomeNumber; i++) {
+            fw.write(genomeStringRun.get(i) + "\n");
+            fw.write(genomeStringOnScanned.get(i) + "\n");
+            fw.write(genomeStringOnHitWall.get(i) + "\n");
+            fw.write(genomeStringOnHitBullet.get(i) + "\n");
+            fw.write(genomeStringOnHitRobot.get(i) + "\n");
+            fw.write(fitnessValue.get(i) + "\n");
+        }
+        
+        fw.close();
+	}
+	
 	public void initialize() throws IOException{
 		
 		BufferedReader buf = null;
@@ -48,15 +68,61 @@ public class MainRobot extends AdvancedRobot {
 			
 		} catch (FileNotFoundException e) {
 			// Generate the first randomize file
-			int defaultGenomeNumber = 16;
+			for (int i = 0; i < this.genomeNumber; i++) {
+				
+			}
 			
+			// Generate Random String for all genome
+			// FIRST CONCERN HERE
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < this.genomeNumber; i++) {
+				// Table Run
+				sb.delete(0, sb.length() - 1);
+				for(int k = 0; k < 16; k++) {
+					sb.append((int) (Math.random() * 1.0));
+				}
+				genomeStringRun.add(sb.toString());
+				
+				// Table OnScanned
+				sb.delete(0, sb.length() - 1);
+				for(int k = 0; k < 16; k++) {
+					sb.append((int) (Math.random() * 1.0));
+				}
+				genomeStringOnScanned.add(sb.toString());
+				
+				
+				// Table OnHitWall
+				sb.delete(0, sb.length() - 1);
+				for(int k = 0; k < 16; k++) {
+					sb.append((int) (Math.random() * 1.0));
+				}
+				genomeStringOnHitWall.add(sb.toString());
+				
+				fitnessValue.add(0);
+
+				// Table OnHitRobot
+				sb.delete(0, sb.length() - 1);
+				for(int k = 0; k < 16; k++) {
+					sb.append((int) (Math.random() * 1.0));
+				}
+				genomeStringOnHitRobot.add(sb.toString());
+				
+				
+				// Table OnHitBullet
+				sb.delete(0, sb.length() - 1);
+				for(int k = 0; k < 16; k++) {
+					sb.append((int) (Math.random() * 1.0));
+				}
+				genomeStringOnHitBullet.add(sb.toString());
+				
+				fitnessValue.add(0);
+				
+			}
 			
-			// Read buf file
 			try {
 				buf = new BufferedReader(new FileReader(getDataFile("ga.txt")));
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				
 			}
 		}
 		
@@ -70,11 +136,9 @@ public class MainRobot extends AdvancedRobot {
 				genomeStringOnHitWall.add(buf.readLine());
 				genomeStringOnHitBullet.add(buf.readLine());
 				genomeStringOnHitRobot.add(buf.readLine());
-			}
-			
-			for(int i = 0; i < genomeNumber; i++) {
 				fitnessValue.add(Integer.parseInt(buf.readLine()));
 			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,21 +151,7 @@ public class MainRobot extends AdvancedRobot {
 			ga.doCrossingMutating();
 		
 			// Write to a file
-			RobocodeFileWriter fw = new RobocodeFileWriter(new File("ga.txt"));
-            fw.write("0\n");
-			for (int i = 0; i < genomeNumber; i++) {
-				fw.write(genomeStringRun.get(i) + "\n");
-				fw.write(genomeStringOnScanned.get(i) + "\n");
-				fw.write(genomeStringOnHitWall.get(i) + "\n");
-				fw.write(genomeStringOnHitBullet.get(i) + "\n");
-				fw.write(genomeStringOnHitRobot.get(i) + "\n");
-				
-				
-			}
-			
-			for (int i = 0; i < genomeNumber; i++) {
-				fw.write("0\n");
-			}
+			this.doWriteFile();
 		}
 		
         // Testing part
@@ -111,9 +161,145 @@ public class MainRobot extends AdvancedRobot {
             tableOnHitWall = new TableREX(genomeStringOnHitWall.get(state - 1));
             tableOnHitRobot = new TableREX(genomeStringOnHitRobot.get(state - 1));
             tableOnHitBullet = new TableREX(genomeStringOnHitBullet.get(state - 1));
+            state++;
+            
         } catch (Exception e) {
             
         }
+	}
+	
+	private void switchOfOperator(Row.Operator operator, Row aRow, double inputValue1, double inputValue2) {
+        switch(operator) {
+        case greatherThan:
+            aRow.setResult(inputValue1 > inputValue2? 1.0 : 0.0);
+            break;
+        case absoluteValue:
+            aRow.setResult(Math.abs(inputValue1));
+            break;
+        case addition:
+            aRow.setResult(inputValue1 + inputValue2);
+            break;
+        case and:
+            aRow.setResult((int) inputValue1 & (int) inputValue2);
+            break;
+        case controlActuator:
+            // Unimplemented yet
+            Input.DoActuatorType actuatorType = aRow.getInput1().getDoActuatorTypeEnum();
+            switch(actuatorType) {
+            case back:
+                this.back(inputValue2);
+                break;
+            case fire:
+                this.fire(inputValue2);
+                break;
+            case forward:
+                this.ahead(inputValue2);
+                break;
+            case turnLeft:
+                this.turnLeft(inputValue2);
+                break;
+            case turnRight:
+                this.turnRight(inputValue2);
+                
+            }
+        case division:
+            aRow.setResult(inputValue1 / inputValue2);
+            break;
+        case equal:
+            aRow.setResult(inputValue1 == inputValue2? 1.0 : 0.0);
+            break;
+        case generateConstant:
+            aRow.setResult((int) (Math.random() * 100.0));
+            break;
+        case lessThan:
+                aRow.setResult(inputValue1 < inputValue2? 1.0 : 0.0);
+                break;
+            case modulo:
+                aRow.setResult(inputValue1 % inputValue2);
+                break;
+            case multiplication:
+                aRow.setResult(inputValue1 * inputValue2);
+                break;
+            case normalizeRelativeAngle:
+                aRow.setResult(Utils.normalRelativeAngle(inputValue1));
+                break;
+            case not:
+                aRow.setResult(~((int) inputValue1));
+                break;
+            case or:
+                aRow.setResult((int) inputValue1 & (int) inputValue2);
+                break;
+            case randomFloat:
+                aRow.setResult(Math.random() * 100.0);
+                break;
+            case substraction:
+                aRow.setResult(inputValue1 - inputValue2);
+            }
+	}
+	
+	private double getInputValue(Input.InputType inputType, ScannedRobotEvent sre, int previousLine, int thisLine) {
+		switch(inputType) {
+		case constant1:
+			return 1.0;
+		case constant10:
+			return 10.0;
+		case constant2:
+			return 2.0;
+		case constant90:
+			return 90.0;
+		case distanceToEastWall:
+			// How?
+			break;
+		case distanceToNorthWall:
+			// How?
+			break;
+		case distanceToSOuthWall:
+			// How?
+			break;
+		case distanceToWestWall:
+			// How?
+			break;
+		case enemyBearing:
+			if(sre != null) {
+				return sre.getBearing();
+			} else {
+				// Doesn't decided yet
+			}
+		case enemyDistance:
+			if (sre != null) {
+				return sre.getDistance();
+			} else {
+				// Doesn't decided yet
+			}
+		case enemyEnergy:
+			if (sre != null) {
+				return sre.getEnergy();
+			} else {
+				// Doesn't decided yet
+			}
+		case enemyHeading:
+			if (sre != null) {
+				return sre.getHeading();
+			} else {
+				// Doesn't decided yet
+			}
+		case enemyVelocity:
+			if (sre != null) {
+				return sre.getVelocity();
+			} else {
+				// Doesn't decided yet
+			}
+		case gunHeading:
+			return this.getGunHeading();
+		case gunHeat:
+			return this.getGunHeat();
+		case heading:
+			return this.getHeading();
+		case previousLine:
+			return tableRun.getTableRow().get(thisLine - (previousLine % thisLine)).getResult();
+		}
+		
+		return 1.0;
 	}
 	
 	public void run() {
@@ -129,26 +315,35 @@ public class MainRobot extends AdvancedRobot {
 			for(int i = 0; i < tableRun.getTableRow().size(); i++) {
 				// Calculate result, depends on operator
 				Row.Operator operator = tableRun.getTableRow().get(i).getOperator();
-				
-				//double inputValue2 = 
-				switch(tableRun.getTableRow().get(i).getOperator()) {
-				case greatherThan:
-					//tableRun.getTableRow().get(i).setResult((double) );
-					break;
-					
-				}
+				Row aRow = tableRun.getTableRow().get(i);
+				double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
+				double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
+				this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
 			}
 		}
 	}
 
 	@Override
 	public void onScannedRobot(ScannedRobotEvent e) {
-
+		for(int i = 0; i < tableOnScanned.getTableRow().size(); i++) {
+			Row.Operator operator = tableOnScanned.getTableRow().get(i).getOperator();
+			Row aRow = tableRun.getTableRow().get(i);
+			double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), e, aRow.getInput1().getPreviousLine(), i);
+			double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), e, aRow.getInput2().getPreviousLine(), i);
+			this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+		}
 	}
 
 	@Override
 	public void onHitRobot(HitRobotEvent e) {
 		
+	}
+	
+	@Override
+	public void onHitWall(HitWallEvent event) {
+	}
+	
+	public void onRoundEnded(RoundEndedEvent event) {
 	}
 	
 	
