@@ -38,7 +38,7 @@ public class Input {
 	}
 	
 	public DoActuatorType getDoActuatorTypeEnum() {
-		return DoActuatorType.values()[this.inputType];
+		return DoActuatorType.values()[this.inputType % 5];
 	}
 	
 	public int getInputType() {

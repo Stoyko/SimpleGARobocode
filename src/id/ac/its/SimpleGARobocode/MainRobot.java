@@ -1,6 +1,7 @@
 package id.ac.its.SimpleGARobocode;
 
 import robocode.AdvancedRobot;
+import robocode.HitByBulletEvent;
 import robocode.HitRobotEvent;
 import robocode.HitWallEvent;
 import robocode.RobocodeFileWriter;
@@ -44,7 +45,7 @@ public class MainRobot extends AdvancedRobot {
 	 */
 	
 	private void doWriteFile() throws IOException {
-        RobocodeFileWriter fw = new RobocodeFileWriter(new File("ga.txt"));
+        RobocodeFileWriter fw = new RobocodeFileWriter(getDataFile("ga.txt"));
         fw.write(state + "\n");
         fw.write(genomeNumber + "\n");
         for (int i = 0; i < genomeNumber; i++) {
@@ -60,102 +61,95 @@ public class MainRobot extends AdvancedRobot {
 	}
 	
 	public void initialize() throws IOException{
-		
-		BufferedReader buf = null;
 		try {
-			// Text file reading part
-			buf = new BufferedReader(new FileReader(getDataFile("ga.txt")));
-			
-		} catch (FileNotFoundException e) {
-			// Generate the first randomize file
-			for (int i = 0; i < this.genomeNumber; i++) {
-				
-			}
-			
-			// Generate Random String for all genome
-			// FIRST CONCERN HERE
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < this.genomeNumber; i++) {
-				// Table Run
-				sb.delete(0, sb.length() - 1);
-				for(int k = 0; k < 16; k++) {
-					sb.append((int) (Math.random() * 1.0));
-				}
-				genomeStringRun.add(sb.toString());
-				
-				// Table OnScanned
-				sb.delete(0, sb.length() - 1);
-				for(int k = 0; k < 16; k++) {
-					sb.append((int) (Math.random() * 1.0));
-				}
-				genomeStringOnScanned.add(sb.toString());
-				
-				
-				// Table OnHitWall
-				sb.delete(0, sb.length() - 1);
-				for(int k = 0; k < 16; k++) {
-					sb.append((int) (Math.random() * 1.0));
-				}
-				genomeStringOnHitWall.add(sb.toString());
-				
-				fitnessValue.add(0);
+            BufferedReader buf = null;
+            // Text file reading part
+            
+            if(getDataFile("ga.txt").length() == 0) {
+                // Generate the first randomize file
+                
+                // Generate Random String for all genome
+                // FIRST CONCERN HERE
+                StringBuilder sb = new StringBuilder();
+                this.state = 1;
+                for (int i = 0; i < this.genomeNumber; i++) {
+                    // Table Run
+                    sb.delete(0, sb.length());
+                    for(int k = 0; k < 704; k++) {
+                        sb.append((int) (Math.random() * 100) % 2);
+                    }
+                    genomeStringRun.add(sb.toString());
+                    
+                    // Table OnScanned
+                    sb.delete(0, sb.length());
+                    for(int k = 0; k < 704; k++) {
+                        sb.append((int) (Math.random() * 100) % 2);
+                    }
+                    genomeStringOnScanned.add(sb.toString());
+                    
+                    
+                    // Table OnHitWall
+                    sb.delete(0, sb.length());
+                    for(int k = 0; k < 704; k++) {
+                        sb.append((int) (Math.random() * 100) % 2);
+                    }
+                    genomeStringOnHitWall.add(sb.toString());
+                    
+                    fitnessValue.add(0);
 
-				// Table OnHitRobot
-				sb.delete(0, sb.length() - 1);
-				for(int k = 0; k < 16; k++) {
-					sb.append((int) (Math.random() * 1.0));
-				}
-				genomeStringOnHitRobot.add(sb.toString());
-				
-				
-				// Table OnHitBullet
-				sb.delete(0, sb.length() - 1);
-				for(int k = 0; k < 16; k++) {
-					sb.append((int) (Math.random() * 1.0));
-				}
-				genomeStringOnHitBullet.add(sb.toString());
-				
-				fitnessValue.add(0);
-				
-			}
-			
-			try {
-				buf = new BufferedReader(new FileReader(getDataFile("ga.txt")));
-			} catch (FileNotFoundException e1) {
-				
-			}
-		}
-		
-		// Read the state
-		try {
-			state = Integer.parseInt(buf.readLine());
-			genomeNumber = Integer.parseInt(buf.readLine());
-			for(int i = 0; i < genomeNumber; i++) {
-				genomeStringRun.add(buf.readLine());
-				genomeStringOnScanned.add(buf.readLine());
-				genomeStringOnHitWall.add(buf.readLine());
-				genomeStringOnHitBullet.add(buf.readLine());
-				genomeStringOnHitRobot.add(buf.readLine());
-				fitnessValue.add(Integer.parseInt(buf.readLine()));
-			}
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Is this crossing and mutating state?
-		if(state == 0) {
-			// Crossing and mutating part
-			GeneticAlgorithmRobocode ga = new GeneticAlgorithmRobocode(genomeNumber, genomeStringRun, genomeStringOnScanned, genomeStringOnHitWall, genomeStringOnHitBullet, genomeStringOnHitRobot, fitnessValue);
-			ga.doCrossingMutating();
-		
-			// Write to a file
-			this.doWriteFile();
-		}
-		
-        // Testing part
-        try {
+                    // Table OnHitRobot
+                    sb.delete(0, sb.length());
+                    for(int k = 0; k < 704; k++) {
+                        sb.append((int) (Math.random() * 100) % 2);
+                    }
+                    genomeStringOnHitRobot.add(sb.toString());
+                    
+                    
+                    // Table OnHitBullet
+                    sb.delete(0, sb.length());
+                    for(int k = 0; k < 704; k++) {
+                        sb.append((int) (Math.random() * 100) % 2);
+                    }
+                    genomeStringOnHitBullet.add(sb.toString());
+                    
+                    fitnessValue.add(0);
+                    
+                }
+                this.doWriteFile();
+                
+            }
+            
+            // Read the state
+            try {
+                
+                buf = new BufferedReader(new FileReader(getDataFile("ga.txt")));
+                state = Integer.parseInt(buf.readLine());
+                genomeNumber = Integer.parseInt(buf.readLine());
+                for(int i = 0; i < genomeNumber; i++) {
+                    genomeStringRun.add(buf.readLine());
+                    genomeStringOnScanned.add(buf.readLine());
+                    genomeStringOnHitWall.add(buf.readLine());
+                    genomeStringOnHitBullet.add(buf.readLine());
+                    genomeStringOnHitRobot.add(buf.readLine());
+                    fitnessValue.add(Integer.parseInt(buf.readLine()));
+                }
+                
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+            // Is this crossing and mutating state?
+            if(state == 0) {
+                // Crossing and mutating part
+                GeneticAlgorithmRobocode ga = new GeneticAlgorithmRobocode(genomeNumber, genomeStringRun, genomeStringOnScanned, genomeStringOnHitWall, genomeStringOnHitBullet, genomeStringOnHitRobot, fitnessValue);
+                ga.doCrossingMutating();
+            
+                // Write to a file
+                this.doWriteFile();
+            }
+            
+            // Testing part
             tableRun = new TableREX(genomeStringRun.get(state - 1));
             tableOnScanned = new TableREX(genomeStringOnScanned.get(state - 1));
             tableOnHitWall = new TableREX(genomeStringOnHitWall.get(state - 1));
@@ -163,13 +157,13 @@ public class MainRobot extends AdvancedRobot {
             tableOnHitBullet = new TableREX(genomeStringOnHitBullet.get(state - 1));
             state++;
             
-        } catch (Exception e) {
-            
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void switchOfOperator(Row.Operator operator, Row aRow, double inputValue1, double inputValue2) {
-        switch(operator) {
+		switch(operator) {
         case greatherThan:
             aRow.setResult(inputValue1 > inputValue2? 1.0 : 0.0);
             break;
@@ -203,7 +197,10 @@ public class MainRobot extends AdvancedRobot {
                 
             }
         case division:
-            aRow.setResult(inputValue1 / inputValue2);
+            if(inputValue2 == 0) {
+            	inputValue2 = 1;
+            }
+        	aRow.setResult(inputValue1 / inputValue2);
             break;
         case equal:
             aRow.setResult(inputValue1 == inputValue2? 1.0 : 0.0);
@@ -296,7 +293,11 @@ public class MainRobot extends AdvancedRobot {
 		case heading:
 			return this.getHeading();
 		case previousLine:
-			return tableRun.getTableRow().get(thisLine - (previousLine % thisLine)).getResult();
+			if (thisLine == 0) {
+				return tableRun.getTableRow().get(0).getResult();
+			} else {
+                return tableRun.getTableRow().get(thisLine - (previousLine % thisLine)).getResult();
+			}
 		}
 		
 		return 1.0;
@@ -309,17 +310,25 @@ public class MainRobot extends AdvancedRobot {
 			
 		}
 		
-		initialized = true;
-		while(true) {
-			// Read run table
-			for(int i = 0; i < tableRun.getTableRow().size(); i++) {
-				// Calculate result, depends on operator
-				Row.Operator operator = tableRun.getTableRow().get(i).getOperator();
-				Row aRow = tableRun.getTableRow().get(i);
-				double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
-				double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
-				this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
-			}
+		try {
+            initialized = true;
+            while(true) {
+                // Read run table
+                for(int i = 0; i < tableRun.getTableRow().size(); i++) {
+                    // Calculate result, depends on operator
+                    Row.Operator operator = tableRun.getTableRow().get(i).getOperator();
+                    Row aRow = tableRun.getTableRow().get(i);
+                    double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
+                    double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
+                    if(i % 11 == 0) {
+                    	this.switchOfOperator(Row.Operator.controlActuator, aRow, inputValue1, inputValue2);
+                    } else {
+                    	this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+                    }
+                }
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -327,24 +336,70 @@ public class MainRobot extends AdvancedRobot {
 	public void onScannedRobot(ScannedRobotEvent e) {
 		for(int i = 0; i < tableOnScanned.getTableRow().size(); i++) {
 			Row.Operator operator = tableOnScanned.getTableRow().get(i).getOperator();
-			Row aRow = tableRun.getTableRow().get(i);
+			Row aRow = tableOnScanned.getTableRow().get(i);
 			double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), e, aRow.getInput1().getPreviousLine(), i);
 			double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), e, aRow.getInput2().getPreviousLine(), i);
-			this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+			if(i % 11 == 0) {
+            	this.switchOfOperator(Row.Operator.controlActuator, aRow, inputValue1, inputValue2);
+            } else {
+            	this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+            }
+			
 		}
+		
 	}
 
 	@Override
 	public void onHitRobot(HitRobotEvent e) {
-		
+		for(int i = 0; i < tableOnHitRobot.getTableRow().size(); i++) {
+			Row.Operator operator = tableOnHitRobot.getTableRow().get(i).getOperator();
+			Row aRow = tableOnHitRobot.getTableRow().get(i);
+			double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
+			double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
+			if(i % 11 == 0) {
+            	this.switchOfOperator(Row.Operator.controlActuator, aRow, inputValue1, inputValue2);
+            } else {
+            	this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+            }
+			
+		}
 	}
 	
 	@Override
 	public void onHitWall(HitWallEvent event) {
+		for(int i = 0; i < tableOnHitWall.getTableRow().size(); i++) {
+			Row.Operator operator = tableOnHitWall.getTableRow().get(i).getOperator();
+			Row aRow = tableOnHitWall.getTableRow().get(i);
+			double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
+			double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
+			if(i % 11 == 0) {
+            	this.switchOfOperator(Row.Operator.controlActuator, aRow, inputValue1, inputValue2);
+            } else {
+            	this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+            }
+			
+		}
+	}
+	
+	@Override
+	public void onHitByBullet(HitByBulletEvent event) {
+		for(int i = 0; i < tableOnHitBullet.getTableRow().size(); i++) {
+			Row.Operator operator = tableOnHitBullet.getTableRow().get(i).getOperator();
+			Row aRow = tableOnHitBullet.getTableRow().get(i);
+			double inputValue1 = getInputValue(aRow.getInput1().getInputTypeEnum(), null, aRow.getInput1().getPreviousLine(), i);
+			double inputValue2 = getInputValue(aRow.getInput2().getInputTypeEnum(), null, aRow.getInput2().getPreviousLine(), i);
+			if(i % 11 == 0) {
+            	this.switchOfOperator(Row.Operator.controlActuator, aRow, inputValue1, inputValue2);
+            } else {
+            	this.switchOfOperator(operator, aRow, inputValue1, inputValue2);
+            }
+			
+		}
 	}
 	
 	public void onRoundEnded(RoundEndedEvent event) {
 	}
+	
 	
 	
 	
