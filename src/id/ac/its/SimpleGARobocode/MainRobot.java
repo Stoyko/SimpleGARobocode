@@ -1,6 +1,7 @@
 package id.ac.its.SimpleGARobocode;
 
 import robocode.AdvancedRobot;
+import robocode.BattleEndedEvent;
 import robocode.HitByBulletEvent;
 import robocode.HitRobotEvent;
 import robocode.HitWallEvent;
@@ -95,7 +96,6 @@ public class MainRobot extends AdvancedRobot {
                     }
                     genomeStringOnHitWall.add(sb.toString());
                     
-                    fitnessValue.add(0);
 
                     // Table OnHitRobot
                     sb.delete(0, sb.length());
@@ -112,7 +112,7 @@ public class MainRobot extends AdvancedRobot {
                     }
                     genomeStringOnHitBullet.add(sb.toString());
                     
-                    fitnessValue.add(0);
+                    fitnessValue.add(-100);
                     
                 }
                 this.doWriteFile();
@@ -140,14 +140,20 @@ public class MainRobot extends AdvancedRobot {
             }
             
             // Is this crossing and mutating state?
+            if(state == this.genomeNumber) {
+            	// Reset state
+            	state = 0;
+            }
             if(state == 0) {
                 // Crossing and mutating part
                 GeneticAlgorithmRobocode ga = new GeneticAlgorithmRobocode(genomeNumber, genomeStringRun, genomeStringOnScanned, genomeStringOnHitWall, genomeStringOnHitBullet, genomeStringOnHitRobot, fitnessValue);
                 ga.doCrossingMutating();
-            
+                state = state + 1; 
                 // Write to a file
                 this.doWriteFile();
             }
+            
+            
             
             // Testing part
             tableRun = new TableREX(genomeStringRun.get(state - 1));
@@ -155,7 +161,6 @@ public class MainRobot extends AdvancedRobot {
             tableOnHitWall = new TableREX(genomeStringOnHitWall.get(state - 1));
             tableOnHitRobot = new TableREX(genomeStringOnHitRobot.get(state - 1));
             tableOnHitBullet = new TableREX(genomeStringOnHitBullet.get(state - 1));
-            state++;
             
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -397,7 +402,16 @@ public class MainRobot extends AdvancedRobot {
 		}
 	}
 	
-	public void onRoundEnded(RoundEndedEvent event) {
+	@Override
+	public void onBattleEnded(BattleEndedEvent event) {
+		fitnessValue.set(state - 1, event.getResults().getScore());
+        state++;
+		try {
+			this.doWriteFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

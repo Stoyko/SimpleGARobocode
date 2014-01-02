@@ -100,13 +100,13 @@ public class GeneticAlgorithmRobocode {
 		
 		fitnessValue.clear();
 		for(int i = 0; i < genomeNumber; i++){
-			fitnessValue.add(0);
+			fitnessValue.add(-100);
 		}
 	}
 
 	private String mutate(String p) {
 		StringBuilder sp = new StringBuilder(p);
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 704; i++) {
             if (Math.random() <= 0.015) {
                 // Create random gene
                 int gene = random.nextInt(1);
@@ -124,7 +124,7 @@ public class GeneticAlgorithmRobocode {
 	private String getChild(String p1, String p2) {
 		StringBuilder sb = new StringBuilder();
 		
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 704; i++) {
 			if(Math.random() <= 0.5) {
 				sb.append(p1.charAt(i));
 			} else {
