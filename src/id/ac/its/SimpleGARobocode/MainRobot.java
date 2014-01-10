@@ -9,6 +9,7 @@ import robocode.RobocodeFileWriter;
 import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
 import robocode.util.*;
+import id.ac.its.SimpleGARobocode.Row.Operator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -351,6 +352,7 @@ public class MainRobot extends AdvancedRobot {
             }
 			
 		}
+		fire(10);
 		
 	}
 
