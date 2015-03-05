@@ -1,42 +1,40 @@
-# Petunjuk Penggunaan SimpleGARobocode
+Instructions for Use SimpleGARobocode
 
-## Lisensi
+## License
 
-Baca LICENSE
+Read LICENSE
 
-## Penggunaan Pada Robocode
+## Use In Robocode
 
-1) Ekstrak isi dari SimpleGARobocode
-2) Buka Robocode
-3) Klik menu Options > Preferences
-4) Buka Laman "Development Options"
-5) Klik tombol "Add", kemudian buka direktori bin/ dari hasil ekstrak dan tambahkan.
-6) Klik Finish.
-7) Lakukan pembuatan Battle Baru, klik menu Battle > New Battle. 
-8) Tambahkan MainRobot dan sebuah/beberapa lawannya (Disarankan menggunakan Crazy).
-9) Pilih laman Rules.
-10) Isi "1" pada Number of Rounds (WAJIB! Sistem penghitungan fitness skor tidak bisa dilakukan antar ronde).
-11) Klik Start Battle
-
-
-## Berkas ga.txt
-
-Setiap kali ronde berjalan, robot akan memproses berkas ga.txt yang disimpan pada direktori bin/id/ac/its/SimpleGARobocode/MainRobot.Data. Berkas tersebut berisi 16 buah populasi masing-masing memiliki 5 gnome untuk rutin : run(), OnScanned(), OnHitByBullet(), OnHitByWall(), OnHitByRobot() beserta sebuah fitness value untuk setiap kombinasi gnome tersebut. Robot akan menghitung semua fitness untuk semua populasi sebelum melakukan proses persilangan dan mutasi genome untuk generasi selanjutnya.
-
-## Kekurangan
-
-* Urutan kerja pada Genome masih Naive, tidak ada optimasi khusus untuk meningkatkan performa fitness.
-* Tidak ada pencatatan nomor generasi saat ini.
-* Perlu sekitar 3 generasi agar bisa mengalahkan Crazy (berdasarkan hasil uji coba kami).
-
-## Kompilasi Ulang Kode Java
-
-Disediakan sebuah skrip bernama build-robot.bat (untuk Windows) dan build-robot.sh (untuk Linux/Mac OS X) yang dapat secara otomatis mengkompilasi ulang kode *.java dari src menjadi berkas *.class pada bin. Sebelum melakukan kompilasi, pastikan robocode terpasang di C:\robocode (pada Windows) atau ~/robocode atau direktori Home/robocode (pada Linux dan Mac OS X) agar pengaturan classpath Java bisa mengarahkan berkas jar robocode/libs/robocode.jar.
-
-Untuk menjalankan skrip :
-* Klik dua kali pada Windows (pastikan JDK bin masuk ke dalam system variable PATH)
-* Buka terminal, arahkan (cd) direktori ke hasil ekstrak, jalankan "./build-robot.sh" (tanpa tanda petik) pada Linux/Mac OS X.
-
-PERHATIAN: Robot memiliki beberapa jumlah kelas yang terkait satu sama lain. Kompilasi langsung melalui aplikasi Robocode tidak bisa dilakukan karena tidak bisa melakukan kompilasi banyak kelas sekaligus.
+1) Extract the contents of SimpleGARobocode
+2) Open Robocode
+3) Click the Options menu> Preferences
+4) Open the page "Development Options"
+5) Click the "Add", then open the directory bin / of the extract and add the results.
+6) Click Finish.
+7) Perform a New Battle manufacture, click menu Battle> New Battle.
+8) Add MainRobot and a / some opponents (Suggested use Crazy).
+9) Select Rules page.
+10) Fill out the "1" on the Number of Rounds (MANDATORY! Counting system fitness scores can not be done between rounds).
+11) Click the Start Battle
 
 
+## File ga.txt
+
+Each time round running, the robot will process ga.txt files stored in the directory bin / ps / ac / its / SimpleGARobocode / MainRobot.Data. It contains 16 pieces each having a population of 5 gnome for routine: run (), OnScanned (), OnHitByBullet (), OnHitByWall (), OnHitByRobot () along with a fitness value for each combination of the gnome. The robot will calculate all fitness for all populations prior to the crossover and mutation genome to the next generation.
+
+## Disadvantages
+
+* Sequence Genome still working on Naive, no special optimizations to improve performance fitness.
+* There is no recording of the current generation number.
+* It should be about 3 generations in order to beat Crazy (based on the results of our trial).
+
+## Compilation Re Java Code
+
+Provided a script called build-robot.bat (for Windows) and build-robot.sh (for Linux / Mac OS X) that can automatically recompile the code * .java from src into * .class file in bin. Before compiling, make sure robocode installed in C: \ robocode (on Windows) or ~ / robocode or directory Home / robocode (on Linux and Mac OS X) that can direct the Java classpath setting jar file robocode / libs / robocode.jar.
+
+To run the script:
+* Double-click on Windows (make sure the JDK bin into the system variable PATH)
+* Open a terminal, point (cd) to the extracted directory, run "./build-robot.sh" (without the quotes) on Linux / Mac OS X.
+
+CAUTION: The robot has a few number of classes that are related to each other. Compilation directly through Robocode application can not be done because it can not compile a lot of class time.
